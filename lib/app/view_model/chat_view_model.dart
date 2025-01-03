@@ -16,8 +16,12 @@ class ChatViewModel extends ChangeNotifier {
   List<Message> get messages => _messages;
 
   void sendMessage(String text, String sender) {
-    final message =
-        Message(sender: sender, text: text, timestamp: DateTime.now());
+    final message = Message(
+      sender: sender,
+      text: text,
+      timestamp: DateTime.now(),
+    );
+    _messages.add(message);
     _repository.sendMessage(message);
   }
 

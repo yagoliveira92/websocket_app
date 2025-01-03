@@ -12,7 +12,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final _nomeUsuario = "Teste";
+  final _nomeUsuario = "Cliente";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,22 +24,47 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: Consumer<ChatViewModel>(
-              builder: (context, viewModel, child) {
-                return ListView.builder(
-                    itemCount: viewModel.messages.length,
-                    itemBuilder: (context, index) {
-                      final message = viewModel.messages[index];
-                      return ListTile(
-                        title: Text('${message.sender}: ${message.text}'),
-                      );
-                    });
-              },
-            )),
+            Expanded(
+              child: Consumer<ChatViewModel>(
+                builder: (context, viewModel, child) {
+                  return CustomScrollView(
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          childCount: viewModel.messages.length,
+                          (context, index) {
+                            final message = viewModel.messages[index];
+                            return ListTile(
+                              title: Text.rich(
+                                TextSpan(
+                                  text: message.sender,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: ': ${message.text}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
             Form(
               child: TextFormField(
                 controller: _controller,
-                decoration: const InputDecoration(labelText: 'Enviar mensagem'),
+                decoration:
+                    const InputDecoration(labelText: 'Escrever mensagem...'),
               ),
             ),
             Padding(
